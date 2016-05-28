@@ -107,6 +107,30 @@ resource "aws_security_group" "web" {
   }
 }
 
+resource "aws_instance" "ecs_agent_a" {
+  ami = "ami-72ae4313"
+  instance_type = "t2.medium"
+  key_name = "virtue-key-pair"
+  vpc_security_group_ids = ["${aws_security_group.web.id}"]
+  subnet_id = "${aws_subnet.virtue_subnet_a.id}"
+
+  tags {
+    Name = "ecs-agent"
+  }
+}
+
+resource "aws_instance" "ecs_agent_b" {
+  ami = "ami-72ae4313"
+  instance_type = "t2.medium"
+  key_name = "virtue-key-pair"
+  vpc_security_group_ids = ["${aws_security_group.web.id}"]
+  subnet_id = "${aws_subnet.virtue_subnet_b.id}"
+
+  tags {
+    Name = "ecs-agent"
+  }
+}
+
 resource "aws_elb" "virtue_elb" {
   name = "virtue-elb"
   availability_zones = ["${split(",", var.aws_availability_zones)}"]
