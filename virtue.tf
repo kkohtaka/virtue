@@ -20,7 +20,7 @@ variable "aws_region" {
 variable "aws_availability_zones" {
   default = "string"
   description = ""
-  default = "ap-northeast-1a,ap-northeast-1b"
+  default = "ap-northeast-1b,ap-northeast-1c"
 }
 
 provider "aws" {
@@ -50,6 +50,24 @@ resource "aws_vpc" "virtue_vpc" {
   cidr_block = "10.0.0.0/16"
   tags {
     Name = "virtue-vpc"
+  }
+}
+
+resource "aws_subnet" "virtue_subnet_a" {
+  vpc_id = "${aws_vpc.virtue_vpc.id}"
+  cidr_block = "10.0.0.0/24"
+  availability_zone = "${element(split(",", var.aws_availability_zones), 0)}"
+  tags {
+    Name = "virtue-subnet-a"
+  }
+}
+
+resource "aws_subnet" "virtue_subnet_b" {
+  vpc_id = "${aws_vpc.virtue_vpc.id}"
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "${element(split(",", var.aws_availability_zones), 1)}"
+  tags {
+    Name = "virtue-subnet-b"
   }
 }
 
@@ -88,8 +106,6 @@ resource "aws_security_group" "web" {
     Name = "web"
   }
 }
-
-
 
 resource "aws_elb" "virtue_elb" {
   name = "virtue-elb"
