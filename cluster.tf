@@ -11,24 +11,6 @@ resource "aws_ecs_cluster" "virtue_cluster" {
   name = "virtue-cluster"
 }
 
-resource "aws_elb" "virtue_elb" {
-  name = "virtue-elb"
-  availability_zones = ["${split(",", var.aws_availability_zones)}"]
-  listener {
-    instance_port = 9090
-    instance_protocol = "http"
-    lb_port = 80
-    lb_protocol = "http"
-  }
-  health_check {
-    healthy_threshold = 2
-    unhealthy_threshold = 2
-    timeout = 3
-    target = "HTTP:80/"
-    interval = 30
-  }
-}
-
 resource "aws_security_group" "web" {
   name = "web"
   description = "Allow inbound HTTP and HTTPS traffic"
@@ -105,10 +87,6 @@ EOF
     "aws_key_pair.virtue_key_pair",
     "aws_ecs_cluster.virtue_cluster"
   ]
-}
-
-output "virtue_elb_dns_name" {
-  value = "${aws_elb.virtue_elb.dns_name}"
 }
 
 output "virtue_instance_ip_a" {
