@@ -36,8 +36,8 @@ resource "aws_ecs_service" "prometheus_service" {
     container_port = 80
   }
   depends_on = [
-    "aws_instance.virtue_instance_a",
-    "aws_instance.virtue_instance_b"
+    "aws_ecs_cluster.virtue_cluster",
+    "aws_autoscaling_group.virtue_autoscaling_group"
   ]
 }
 
